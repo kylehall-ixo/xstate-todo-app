@@ -1,13 +1,14 @@
 <template>
   <main>
     <h1>{{title}}</h1>
-    <button @click="send('TOGGLE')">
-      {{
-        state.value === 'inactive'
-          ? 'Click to activate'
-          : 'Active! Click to deactivate'
-      }}
+    <button class="startBtn" @click="send('TIMER')">
+      Start
     </button>
+    <div class="traffic-light-container">
+      <div class="light red-light" v-bind:class="{ 'red-active': state.value === 'red' }"></div>
+      <div class="light yellow-light" v-bind:class="{ 'yellow-active': state.value === 'yellow' }"></div>
+      <div class="light green-light" v-bind:class="{ 'green-active': state.value === 'green' }"></div>
+    </div>
   </main>
 </template>
 
@@ -15,15 +16,24 @@
 import { useMachine } from '@xstate/vue';
 import { Machine } from 'xstate';
 
-const toggleMachine = Machine({
-  id: 'toggle',
-  initial: 'inactive',
+const lightMachine = Machine({
+  id: 'light',
+  initial: 'green',
   states: {
-    inactive: {
-      on: { TOGGLE: 'active' }
+    green: {
+      on: {
+        TIMER: 'yellow'
+      }
     },
-    active: {
-      on: { TOGGLE: 'inactive' }
+    yellow: {
+      on: {
+        TIMER: 'red'
+      }
+    },
+    red: {
+      on: {
+        TIMER: 'green'
+      }
     }
   }
 });
@@ -35,7 +45,7 @@ export default {
     }
   },
   setup() {
-    const { state, send } = useMachine(toggleMachine);
+    const { state, send } = useMachine(lightMachine);
     return {
       state,
       send
@@ -43,3 +53,56 @@ export default {
   }
 };
 </script>
+
+<style>
+  .traffic-light-container {
+    width: 18%;
+    padding-top: 16px;
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #333;
+    border-radius: 8px;
+  }
+
+  .light {
+    width: 250px;
+    height: 250px;
+    border-radius: 100%;
+    margin-bottom: 16px;
+  }
+
+  .red-light {
+    background-color: hsla(360, 100%, 34%, 1);
+  }
+
+  .yellow-light {
+    background-color: hsla(50, 100%, 42%, 1);
+  }
+
+  .green-light {
+    background-color: green;
+  }
+
+  .startBtn {
+    padding: 25px 45px;
+    border-radius: 25%;
+    margin-bottom: 48px;
+  }
+
+  .red-active {
+    background-color: hsla(360, 100%, 60%, 1);
+  }
+
+  .yellow-active {
+    background-color: hsla(50, 100%, 63%, 1);
+  }
+
+  .green-active {
+    background-color: #52ff52;
+  }
+
+</style>
