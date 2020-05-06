@@ -2,7 +2,7 @@
   <main>
     <h1>{{title}}</h1>
     <button class="startBtn" @click="send('TIMER')">
-      Start
+      Step
     </button>
     <div class="traffic-light-container">
       <div class="light red-light" v-bind:class="{ 'red-active': state.value === 'red' }"></div>
@@ -76,7 +76,7 @@ export default {
   }
 
   .red-light {
-    background-color: hsla(360, 100%, 34%, 1);
+    background-color: hsla(360, 82%, 43%, 1);
   }
 
   .yellow-light {
@@ -94,7 +94,7 @@ export default {
   }
 
   .red-active {
-    background-color: hsla(360, 100%, 60%, 1);
+    background-color: hsla(360, 100%, 53%, 1);
   }
 
   .yellow-active {
